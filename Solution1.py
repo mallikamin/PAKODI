@@ -5,13 +5,11 @@ import os
 
 # === File paths ===
 excel_file = r"C:\Users\Malik\Desktop\PKODI.xlsx"
-image_folder = r"C:\Users\Malik\Desktop\BatsmanImages"  # folder with PNG/JPG images
+image_folder = r"C:\Users\Malik\Desktop\BatsmanImages"
 
 # === Load data ===
 df = pd.read_excel(excel_file)
 df.columns = ["Batsman", "Average_SR", "Innings", "Runs"]
-
-# Sort by SR descending
 df = df.sort_values(by="Average_SR", ascending=False)
 
 # === Helper to convert image to base64 ===
@@ -19,7 +17,7 @@ def img_to_base64(img_path):
     with open(img_path, "rb") as f:
         return base64.b64encode(f.read()).decode()
 
-# === Bar Chart ===
+# === Bar Chart (images at base) ===
 bar_fig = px.bar(
     df,
     x="Batsman",
@@ -37,29 +35,29 @@ bar_fig.update_traces(
 )
 bar_fig.update_layout(xaxis_tickangle=-45, height=600)
 
-# Add images above bars
+# Place images at bottom
 for i, row in df.iterrows():
-    img_path = os.path.join(image_folder, f"{row['Batsman']}.png")  # assumes .png
+    img_path = os.path.join(image_folder, f"{row['Batsman']}.png")
     if not os.path.exists(img_path):
-        img_path = os.path.join(image_folder, f"{row['Batsman']}.jpg")  # try jpg
+        img_path = os.path.join(image_folder, f"{row['Batsman']}.jpg")
     if os.path.exists(img_path):
         encoded_img = img_to_base64(img_path)
         bar_fig.add_layout_image(
             dict(
                 source=f"data:image/png;base64,{encoded_img}",
                 x=row["Batsman"],
-                y=row["Average_SR"] + 5,
+                y=0,  # bottom of chart
                 xref="x",
                 yref="y",
                 sizex=0.8,
-                sizey=8,
+                sizey=5,  # fixed small height so uniform
                 xanchor="center",
                 yanchor="bottom",
                 layer="above"
             )
         )
 
-# === Bubble Chart ===
+# === Bubble Chart (bigger images) ===
 bubble_fig = px.scatter(
     df,
     x="Average_SR",
@@ -77,7 +75,7 @@ bubble_fig.update_layout(
     height=600
 )
 
-# Add images inside bubbles
+# Place images inside bubbles (slightly larger)
 for i, row in df.iterrows():
     img_path = os.path.join(image_folder, f"{row['Batsman']}.png")
     if not os.path.exists(img_path):
@@ -91,8 +89,8 @@ for i, row in df.iterrows():
                 y=row["Runs"],
                 xref="x",
                 yref="y",
-                sizex=4,
-                sizey=40,
+                sizex=6,  # increased
+                sizey=60,  # increased
                 xanchor="center",
                 yanchor="middle",
                 layer="above"
@@ -100,8 +98,8 @@ for i, row in df.iterrows():
         )
 
 # === Save outputs ===
-bar_output = r"C:\Users\Malik\Desktop\PKODI_bar_with_images.html"
-bubble_output = r"C:\Users\Malik\Desktop\PKODI_bubble_with_images.html"
+bar_output = r"C:\Users\Malik\Desktop\PKODI_bar_with_images_clean.html"
+bubble_output = r"C:\Users\Malik\Desktop\PKODI_bubble_with_images_big.html"
 
 bar_fig.write_html(bar_output)
 bubble_fig.write_html(bubble_output)
