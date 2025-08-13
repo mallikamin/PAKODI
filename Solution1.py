@@ -49,8 +49,8 @@ for i, row in df.iterrows():
                 y=0,  # bottom of chart
                 xref="x",
                 yref="y",
-                sizex=0.8,
-                sizey=5,  # fixed small height so uniform
+                sizex=1.8,
+                sizey=15,  # fixed small height so uniform
                 xanchor="center",
                 yanchor="bottom",
                 layer="above"
@@ -89,8 +89,8 @@ for i, row in df.iterrows():
                 y=row["Runs"],
                 xref="x",
                 yref="y",
-                sizex=6,  # increased
-                sizey=60,  # increased
+                sizex=7,  # increased
+                sizey=70,  # increased
                 xanchor="center",
                 yanchor="middle",
                 layer="above"
