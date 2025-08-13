@@ -50,7 +50,7 @@ for i, row in df.iterrows():
                 xref="x",
                 yref="y",
                 sizex=1.8,
-                sizey=35,  # fixed small height so uniform
+                sizey=25,  # fixed small height so uniform
                 xanchor="center",
                 yanchor="bottom",
                 layer="above"
